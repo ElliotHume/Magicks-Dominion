@@ -7,7 +7,6 @@ package magicks.dominion;
 
 import java.util.ArrayList;
 import java.util.List;
-import static magicks.dominion.Game.blankTile;
 
 
 
@@ -18,7 +17,7 @@ import static magicks.dominion.Game.blankTile;
 public class Map {
     public int xBegin = 35;
     public int yBegin = 596;
-    public List<Tile> board = new ArrayList<Tile>();
+    public List<Tile> board = new ArrayList<>();
     
 
     public Map(){

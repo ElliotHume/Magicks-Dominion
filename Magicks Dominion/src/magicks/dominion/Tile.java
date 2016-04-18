@@ -13,7 +13,6 @@ import static magicks.dominion.Game.mountainTile;
 import static magicks.dominion.Game.oceanTile;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
-import java.lang.*;
 import java.util.HashSet;
 import java.util.Set;
 import org.newdawn.slick.Color;
@@ -33,6 +32,8 @@ public class Tile {
     public boolean pathChosen;
     public int playerControl;
     public Tile pathTile;
+    public float resourceReturn;
+    public int decayCounter;
     
     public Tile(int x,int y, int xCoord, int yCoord){
         this.x = x;
@@ -44,6 +45,8 @@ public class Tile {
         this.chosen = false;
         this.pathChosen = false;
         this.playerControl = 0;
+        this.resourceReturn = 1;
+        this.decayCounter = 0;
     }
     
     public void draw_tile(){
@@ -89,7 +92,7 @@ public class Tile {
         } else if ((this.x == 10) && (this.y == 3)){
             return "grass";
         }
-        Set<String> chanceSet = new HashSet<String>();
+        Set<String> chanceSet = new HashSet<>();
         
         for (Tile tile : board){
             if ((tile.x == this.x-1) && ((tile.y == this.y) || (tile.y == this.y+1))){
