@@ -12,3 +12,6 @@ The game is __very__ early in development and currently only the basic features/
 Below is a picture of the board when the game begins. The player will select which tiles they would like to start their conquest from. Information about the tiles is displayed on the menu in the top left, player information is displayed on the menu in the top right.
 
 ![Example screen](/Images/example.png "Example Screen")
+
+----
+
