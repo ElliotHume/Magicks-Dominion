@@ -5,6 +5,7 @@
  */
 package magicks.dominion;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import static magicks.dominion.Game.blankTile;
@@ -15,6 +16,10 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.geom.Circle;
 import java.util.HashSet;
 import java.util.Set;
+import static magicks.dominion.Game.desertTile;
+import static magicks.dominion.Game.earthResource;
+import static magicks.dominion.Game.rockResource;
+import static magicks.dominion.Game.waterResource;
 import org.newdawn.slick.Color;
 
 /**
@@ -51,14 +56,17 @@ public class Tile {
     
     public void draw_tile(){
         switch (this.biome) {
-            case "grass":
+            case "Grass":
                 grassTile.draw(this.xCoord,this.yCoord);
                 break;
-            case "mountain":
+            case "Mountain":
                 mountainTile.draw(this.xCoord,this.yCoord);
                 break;
-            case "ocean":
+            case "Ocean":
                 oceanTile.draw(this.xCoord,this.yCoord);
+                break;
+            case "Desert":
+                desertTile.draw(this.xCoord,this.yCoord);
                 break;
             default:
                 blankTile.draw(this.xCoord,this.yCoord);
@@ -68,8 +76,6 @@ public class Tile {
     
     public void draw_circle(Graphics g){
         g.setColor(Color.red);
-        g.drawString(String.valueOf(this.x), 10, 10);
-        g.drawString(String.valueOf(this.y), 50, 10);
         g.draw(new Circle(this.xCoord+32,this.yCoord+28,28));
         g.setColor(Color.white);
         if (this.chosen){
@@ -84,23 +90,52 @@ public class Tile {
         return null;
     } 
 
-    String get_biome(List<Tile> board) {
+    String get_biome(List<Tile> board, int desertCount) {
         if ((this.x == 0) && (this.y == 0)){
-            return "mountain";
+            return "Mountain";
         } else if ((this.x == 8) && (this.y == 8)){
-            return "ocean";
+            return "Ocean";
         } else if ((this.x == 10) && (this.y == 3)){
-            return "grass";
+            return "Grass";
+        } else if ( ((this.x == 16) && (this.y == 8)) || ((this.x == 3) && (this.y == 3)) ){
+            return "Desert";
         }
         Set<String> chanceSet = new HashSet<>();
         
         for (Tile tile : board){
             if ((tile.x == this.x-1) && ((tile.y == this.y) || (tile.y == this.y+1))){
-                chanceSet.add(tile.biome);
+                if (tile.biome != "Desert"){
+                    chanceSet.add(tile.biome);
+                } else {
+                    if (desertCount < 14){
+                        //System.out.println(String.valueOf(desertCount));
+                        chanceSet.add(tile.biome);
+                    } else {
+                        chanceSet.add("None");
+                    }
+                }
             } else if ((tile.x == this.x) && ((tile.y == this.y+1) || (tile.y == this.y-1))){
-                chanceSet.add(tile.biome);
+                if (tile.biome != "Desert"){
+                    chanceSet.add(tile.biome);
+                } else {
+                    if (desertCount < 14){
+                        //System.out.println(String.valueOf(desertCount));
+                        chanceSet.add(tile.biome);
+                    } else {
+                        chanceSet.add("None");
+                    }
+                }
             } else if ((tile.x == this.x+1) && ((tile.y == this.y) || (tile.y == this.y-1))){
-                chanceSet.add(tile.biome);
+                if (tile.biome != "Desert"){
+                    chanceSet.add(tile.biome);
+                } else {
+                    if (desertCount < 14){
+                        //System.out.println(String.valueOf(desertCount));
+                        chanceSet.add(tile.biome);
+                    } else {
+                        chanceSet.add("None");
+                    }
+                }
             }
         }
         Random random = new Random();
@@ -152,6 +187,78 @@ public class Tile {
             }
         }
         return false;
+    }
+
+    boolean possible_path(List<Tile> board, List<Tile> controlledTiles) {
+        for (Tile tile : board){
+            if ((tile.x == this.x-1) && ((tile.y == this.y) || (tile.y == this.y+1)) && (controlledTiles.contains(tile))){
+                return true;
+            } else if ((tile.x == this.x) && ((tile.y == this.y+1) || (tile.y == this.y-1)) && (controlledTiles.contains(tile))){
+                return true;
+            } else if ((tile.x == this.x+1) && ((tile.y == this.y) || (tile.y == this.y-1)) && (controlledTiles.contains(tile))){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    boolean is_path(List<Tile> board, List<Tile> controlledTiles) {
+        List<Tile> possibilities = new ArrayList<>();
+        for (Tile tile : board){
+            if ((tile.x == this.x-1) && ((tile.y == this.y) || (tile.y == this.y+1)) && (controlledTiles.contains(tile)/* && tile.pathTile != null */ && this != tile.pathTile )){
+                possibilities.add(tile);
+                //return true;
+            } if ((tile.x == this.x) && ((tile.y == this.y+1) || (tile.y == this.y-1)) && (controlledTiles.contains(tile) && this != tile.pathTile )){
+                possibilities.add(tile);
+                //return true;
+            } if ((tile.x == this.x+1) && ((tile.y == this.y) || (tile.y == this.y-1)) && (controlledTiles.contains(tile) && this != tile.pathTile )){
+                possibilities.add(tile);
+                //return true;
+            }
+        }
+        int counter = 0;
+        for (Tile tile : possibilities){
+            if (tile.pathTile == null){
+                return false;
+            } else {
+                counter += 1;
+                //System.out.println(String.valueOf(counter));
+            }
+        }
+        if (counter != 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void display_information(int x, int y, Player player, Graphics g) {
+        g.setColor(Color.lightGray);
+        g.drawString("Position: ("+String.valueOf(this.x) +"," + String.valueOf(this.y)+")", x+10, y+15);
+        g.drawString("Biome: "+ this.biome, x+180, y+15);
+        
+        switch(this.biome){
+            case "Grass":
+                g.drawString("Resource return: "+String.valueOf((20*this.resourceReturn)*(player.resourceGain*player.earthResourceGain)), x+350, y+15);
+                earthResource.draw(x+575, y+8);
+                break;
+            case "Ocean":
+                g.drawString("Resource return: "+String.valueOf((20*this.resourceReturn)*(player.resourceGain*player.waterResourceGain)), x+350, y+15);
+                waterResource.draw(x+575, y+8);
+                break;
+            case "Mountain":
+                g.drawString("Resource return: "+String.valueOf((20*this.resourceReturn)*(player.resourceGain*player.rockResourceGain)), x+350, y+15);
+                rockResource.draw(x+575, y+8);
+                break;
+            case "Desert":
+                g.drawString("Resource return: "+String.valueOf(10), x+350, y+15);
+                earthResource.draw(x+538, y+8);
+                g.drawString("or", x+575, y+15);
+                rockResource.draw(x+600, y+8);
+                break;
+            default:
+                break;
+        }
     }
 
 }

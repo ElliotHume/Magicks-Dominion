@@ -67,14 +67,23 @@ public class Map {
     
     public void biome_gen(){
         boolean filled = false;
+        int desertCount = 0;
         for (Tile tile : board){
-            tile.biome = tile.get_biome(board);
+            tile.biome = tile.get_biome(board, desertCount);
+            if (tile.biome == "Desert") {
+                desertCount += 1;
+            }
         }
         while (!filled){
             filled = true;
             for (Tile tile : board){
                 if (tile.biome == "None"){
-                    tile.biome = tile.get_biome(board);
+                    tile.biome = tile.get_biome(board, desertCount);
+                    if (tile.biome == "Desert") {
+                        desertCount += 1;
+                        //System.out.println(String.valueOf(desertCount));
+                        
+                    }
                 }
             }
             for(Tile tile : board){

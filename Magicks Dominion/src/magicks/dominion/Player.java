@@ -88,26 +88,30 @@ public class Player {
             }
             this.controlledTiles.removeAll(Collections.singleton(selectedTile));
             switch(selectedTile.biome){
-                case "grass":
+                case "Grass":
                     if (selectedTile.playerControl <= 2){
                         this.E += 100;
                     } else {
                         this.E += 50;
                     }
                     break;
-                case "mountain":
+                case "Mountain":
                     if (selectedTile.playerControl <= 2){
                         this.R += 100;
                     } else {
                         this.R += 50;
                     }
                     break;
-                case "ocean":
+                case "Ocean":
                     if (selectedTile.playerControl <= 2){
                         this.W += 100;
                     } else {
                         this.W += 50;
                     }
+                    break;
+                case "Desert":
+                    this.E += 25;
+                    this.R += 25;
                     break;
                 default:
                     break;
