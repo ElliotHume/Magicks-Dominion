@@ -4,7 +4,7 @@ A learning Java project.
 ![Earth Resource](/Images/earth_resource.png "Earth Resource") ![Water Resource](/Images/water_resource.png "Water Resource") ![Rock Resource](/Images/rock_resource.png "Rock Resource") ![Ephesos Resource](/Images/ephesos_resource.png "Ephesos Resource")
 
 Magicks Dominion is a top-down strategy game that is based around resource management, battle strategy, and casting magick rituals.
-The players' characters are prophets of nature gods from different beliefs, both are trying to conquer back land stolen from their deity.
+The players' characters are prophets of nature gods from different beliefs, the egyptian god Geb, and the roman god Silvanus. The players are trying to conquer back land stolen from their deity.
 
 
 
