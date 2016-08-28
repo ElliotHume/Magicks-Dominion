@@ -10,7 +10,7 @@ The players' characters are prophets of nature gods from different beliefs, the 
 
 The game is __very__ early in development and currently only the basic features/mechanics are being developed currently.
 
-Below is a picture of the board when the game begins. The player will select which tiles they would like to start their conquest from. Information about the tiles and ritals are displayed on the menu in the top right, player information is displayed on the menu in the top left.
+Below is a picture of the board when the game begins. The player will select which tiles they would like to start their conquest from. Information about the tiles and rituals are displayed on the menu in the top right, player information is displayed on the menu in the top left.
 
 ![Example screen](/Images/betterexample.png "Example Screen")
 
