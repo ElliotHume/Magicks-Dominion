@@ -5,6 +5,7 @@
  */
 package magicks.dominion;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * @author elliot
  */
-public class Map {
+public class Map implements Serializable {
     public int xBegin = 35;
     public int yBegin = 596;
     public List<Tile> board = new ArrayList<>();

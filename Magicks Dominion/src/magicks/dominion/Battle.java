@@ -16,7 +16,7 @@ import static magicks.dominion.Game.gatheringSound;
  */
 public class Battle implements Serializable {
     public Tile tile;
-    public int total = 20;
+    public double total = 20;
     public int R = 0;
     public int L = 0;
     public int W = 0;
@@ -55,8 +55,12 @@ public class Battle implements Serializable {
     public void battle_calculator(List<Tile> board, Player player, Player enemy, Battle enemyBattle){
         double power = (this.R*0.1)+(this.L*0.11)+(this.W*0.15)+(this.C*0.16);
         double enemyPower = (enemyBattle.R*0.1)+(enemyBattle.L*0.11)+(enemyBattle.W*0.15)+(enemyBattle.C*0.16);
+        System.out.println(power);
+        System.out.println(enemyPower);
         this.total += (power - enemyPower);
+        System.out.println("+: "+ this.total);
         if(this.total >= 40){
+            player.B += 10;
             this.tile.battle = null;
             this.tile.isBattle = false;
             player.remove_path(board, tile);
