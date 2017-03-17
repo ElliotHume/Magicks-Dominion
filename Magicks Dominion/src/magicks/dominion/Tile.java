@@ -99,9 +99,9 @@ public class Tile implements Serializable {
     String get_biome(List<Tile> board, int desertCount) {
         if (((this.x == 0) && (this.y == 0)) || ((this.x == 18) && (this.y == 3))){
             return "Mountain";
-        } else if ((this.x == 8) && (this.y == 8)){
+        } else if ((this.x == 8) && (this.y == 8) || (this.x == 16) && (this.y == 16)){
             return "Ocean";
-        } else if ((this.x == 10) && (this.y == 3)){
+        } else if ((this.x == 10) && (this.y == 3) || (this.x == 3) && (this.y == 7)){
             return "Grass";
         } else if ( ((this.x == 16) && (this.y == 8)) || ((this.x == 3) && (this.y == 3)) ){
             return "Desert";

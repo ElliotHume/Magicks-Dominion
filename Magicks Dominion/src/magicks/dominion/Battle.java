@@ -60,7 +60,7 @@ public class Battle implements Serializable {
         this.total += (power - enemyPower);
         System.out.println("+: "+ this.total);
         if(this.total >= 40){
-            player.B += 10;
+            player.B += 10*player.bloodResourceGain;
             this.tile.battle = null;
             this.tile.isBattle = false;
             player.remove_path(board, tile);

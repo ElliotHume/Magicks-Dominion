@@ -7,8 +7,7 @@ package magicks.dominion;
 
 import java.awt.Font;
 import static magicks.dominion.Game.backgroundMusic;
-import static magicks.dominion.MagicksDominion.SCREENHEIGHT;
-import static magicks.dominion.MagicksDominion.SCREENWIDTH;
+import static magicks.dominion.Game.push;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -61,7 +60,6 @@ public class MainMenu extends BasicGameState {
    public boolean ipMode;
    public boolean joinClicked;
    public boolean hostClicked;
-   public static boolean updatePort = false;
    public static String playMode;
    public static String IP = "";
    public static ServerSocket serverSocket;
@@ -75,11 +73,11 @@ public class MainMenu extends BasicGameState {
         titleFont  = new TrueTypeFont(awtFont2, false);
         background = new Image("images/environment/backgroundtester.png");
         playButton = new Image("images/environment/play_button.png");
-        playButtonRect = new Rectangle(SCREENWIDTH/4,SCREENHEIGHT/3,320,60);
+        playButtonRect = new Rectangle(539,417,320,60);
         hostButton = new Image("images/environment/host_button.png");
-        hostButtonRect = new Rectangle(SCREENWIDTH/2,SCREENHEIGHT/3,320,60);
+        hostButtonRect = new Rectangle(1078,417,320,60);
         joinButton = new Image("images/environment/join_button.png");
-        joinButtonRect = new Rectangle(SCREENWIDTH/3,SCREENHEIGHT/3,320,60);
+        joinButtonRect = new Rectangle(719,417,320,60);
         backgroundMusic = new Music("images/environment/backgroundMusic.wav");
         //backgroundMusic.loop(1, (float) 0.01);
    }
@@ -89,22 +87,22 @@ public class MainMenu extends BasicGameState {
         background.draw(0, 0);
         g.setFont(titleFont);
         g.setColor(Color.black);
-        g.drawString("Magicks Dominion", SCREENWIDTH/3+102, SCREENHEIGHT/4-23);
+        g.drawString("Magicks Dominion", 719+102, 313-23);
         g.setColor(Color.white);
-        g.drawString("Magicks Dominion", SCREENWIDTH/3+100, SCREENHEIGHT/4-25);
+        g.drawString("Magicks Dominion", 719+100, 313-25);
         if (!playClicked){
-            playButton.draw(SCREENWIDTH/4, SCREENHEIGHT/3);
+            playButton.draw(539, 417);
         } else {
-            joinButton.draw(SCREENWIDTH/3, SCREENHEIGHT/3);
-            hostButton.draw(SCREENWIDTH/2, SCREENHEIGHT/3);
+            joinButton.draw(719, 417);
+            hostButton.draw(1078, 417);
             if (ipMode){
                 g.setColor(Color.black);
-                g.fillRect(SCREENWIDTH/3,SCREENHEIGHT/2,681,60);
+                g.fillRect(719,625,681,60);
                 g.setColor(Color.white);
-                g.draw(new Rectangle(SCREENWIDTH/3-1,SCREENHEIGHT/2-1,682,61));
+                g.draw(new Rectangle(719-1,625-1,682,61));
                 if (IP.length() > 0){
                     g.setFont(font); 
-                    g.drawString(IP, SCREENWIDTH/3+6, SCREENHEIGHT/2+13);
+                    g.drawString(IP, 719+6, 625+13);
                 }
                 if (joinClicked){
                     g.setColor(Color.white);
@@ -119,7 +117,7 @@ public class MainMenu extends BasicGameState {
 
    @Override
     public void keyPressed(int key, char c){
-        if (key != 14 && (Character.isAlphabetic(c) || Character.isDigit(c) || key == 39)){
+        if (key != 14 && (Character.isAlphabetic(c) || Character.isDigit(c) || key == 39 || key == 52)){
             IP = IP+c;
         }
     }
@@ -166,7 +164,7 @@ public class MainMenu extends BasicGameState {
                     System.exit(1);
                 } 
             }
-            updatePort = true;
+            push = true;
             game.enterState(1);
         }
         if (input.isMousePressed(0)){

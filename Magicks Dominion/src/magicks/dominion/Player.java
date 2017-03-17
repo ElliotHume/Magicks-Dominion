@@ -34,18 +34,22 @@ public class Player implements Serializable {
     public double A; //arcane
     public double B; //blood
     public int tileChoices;
-    public List<String> classTiles = new ArrayList<>();
+    public List<Class> classTiles = new ArrayList<>();
     public List<Tile> controlledTiles = new ArrayList<>();
     public List<Tile> chosenTiles = new ArrayList<>();
     public List<Battle> battles = new ArrayList<>();
     public float decayRate;
     public int conquerRate;
     public float resourceGain;
+    public int resourceTime;
     public float earthResourceGain;
     public float waterResourceGain;
     public float rockResourceGain;
     public float cropResourceGain;
     public float woodResourceGain;
+    public float bloodResourceGain;
+    public float arcaneResourceGain;
+    public boolean canMill  = true;
     
     public Player(double E, double R, double W, double L, double C, double A, double B, int tileChoices, List classTiles){
         this.E = E; //earth
@@ -59,11 +63,14 @@ public class Player implements Serializable {
         this.classTiles = classTiles;
         this.conquerRate = 1 * 1000;
         this.resourceGain = 1;
+        this.resourceTime = 1000;
         this.earthResourceGain = 1;
         this.rockResourceGain = 1;
         this.waterResourceGain = 1;
         this.cropResourceGain = 1;
         this.woodResourceGain = 1;
+        this.arcaneResourceGain = 1;
+        this.bloodResourceGain = 1;
         this.decayRate = (float) (0.25);
 
     }
@@ -129,7 +136,7 @@ public class Player implements Serializable {
     }
 
     public void remove_tile(List<Tile> board, Tile selectedTile) {
-        if (classTiles.contains("Default") && this.controlledTiles.contains(selectedTile)){
+        if (this.controlledTiles.contains(selectedTile)){
             if (selectedTile.pathChosen){
                 this.remove_path(board, selectedTile.pathTile);
             }
@@ -182,7 +189,6 @@ public class Player implements Serializable {
     }
 
     public void add_tile(Tile selectedTile, Player enemy) {
-        if (classTiles.contains("Default")){
             boolean enemyControlled = false;
             boolean enemyChosen = false;
             
@@ -204,12 +210,11 @@ public class Player implements Serializable {
             if (!this.controlledTiles.contains(selectedTile) && !this.chosenTiles.contains(selectedTile) && !enemyControlled && !enemyChosen){
                 this.controlledTiles.add(selectedTile);
                 selectedTile.controlled = true;
-                this.A += 10;
+                this.A += 10*this.arcaneResourceGain;
                 if (tileChoices > 0){
                     this.tileChoices -= 1;
                 }
             }
-        }
     }
     
     public void choose_tile(List<Tile> board, Tile selectedTile, Player enemy){
@@ -217,7 +222,6 @@ public class Player implements Serializable {
         boolean enemyChosen = false;
         ArrayList<Tile> clonez = new ArrayList<>(enemy.controlledTiles);
         ArrayList<Tile> clonex = new ArrayList<>(enemy.chosenTiles);
-        if (classTiles.contains("Default")){
             for (Tile tile : clonez){
                 if (selectedTile.x == tile.x && selectedTile.y == tile.y){
                     enemyControlled = true;
@@ -235,11 +239,10 @@ public class Player implements Serializable {
             } else if (enemyChosen){
                 this.battles.add(new Battle(selectedTile));
             }
-        }
     }
 
     public void remove_path(List<Tile> board, Tile selectedTile) {
-        if (classTiles.contains("Default")&& this.chosenTiles.contains(selectedTile)){
+        if (this.chosenTiles.contains(selectedTile)){
             if (selectedTile.controlled_check(board, controlledTiles, true)){
                 this.chosenTiles.removeAll(Collections.singleton(selectedTile));
             }

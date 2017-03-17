@@ -86,6 +86,10 @@ public class Game extends BasicGameState {
     public static Image aiamancyButton;
     public static Image ephemancyButton;
     public static Image koromancyButton;
+    public static Image aiamancyRitualsBackground;
+    public static Image ephemancyRitualsBackground;
+    public static Image koromancyRitualsBackground;
+    public static Image aiamancyBackground;
     public Rectangle tileHudRect;
     public Rectangle ritualHudRect;
     public Rectangle conquerButtonRect;
@@ -94,8 +98,8 @@ public class Game extends BasicGameState {
     public Rectangle ephemancyButtonRect;
     public Rectangle koromancyButtonRect;
     public Map board;
-    public Player player;
-    public Player enemyPlayer;
+    public static Player player;
+    public static Player enemyPlayer;
     public List<String> classTiles = new ArrayList<>();
     public int mouseX = 0;
     public int mouseY = 0;
@@ -130,7 +134,7 @@ public class Game extends BasicGameState {
     public boolean ephemancyButtonSelected  = false;
     public boolean koromancyButtonSelected  = false;
     public boolean pushBoard;
-    public boolean push = true;
+    public static boolean push = true;
     public boolean leaveScreen = false;
     public int flashCount = 0;
     public Timer resourceTimer = new Timer();
@@ -187,6 +191,8 @@ public class Game extends BasicGameState {
             woodButton = new Rectangle(tHudx+160,tHudy+58,50,20);
             waterButton = new Rectangle(tHudx+260,tHudy+58,50,20);
             cropButton = new Rectangle(tHudx+360,tHudy+58,50,20);
+            aiamancyRitualsBackground = new Image("images/environment/aiamancy_ritual_background.png");
+            ephemancyRitualsBackground = new Image("images/environment/ephemancy_ritual_background.png");
             
             //TILES & RESOURCES
             blankTile = new Image("images/environment/tile.png");
@@ -221,7 +227,6 @@ public class Game extends BasicGameState {
             selectedTile = board.board.get(0);
             
             //PLAYER
-            classTiles.add("Default");
             player = new Player(startingEarth, startingRock, startingWater, startingWood, startingCrop, startingArcane, startingBlood, 2, classTiles);
             
     }
@@ -279,8 +284,6 @@ public class Game extends BasicGameState {
         } else if (c == 'r'){
             if (player.tileChoices > 0 && !player.controlledTiles.contains(selectedTile) && !player.chosenTiles.contains(selectedTile)){
                 player.add_tile(selectedTile, enemyPlayer);
-            } else if ((player.controlledTiles.size() > 0) && (player.controlledTiles.contains(selectedTile))){
-                player.remove_tile(board.board, selectedTile);
             }
         } else if (key == 14){
             if ((rockButtonSelected || woodButtonSelected || waterButtonSelected || cropButtonSelected) && (selectedTile.isBattle)){
@@ -288,7 +291,7 @@ public class Game extends BasicGameState {
                     if (battleRock.length() > 0) {
                         battleRock = battleRock.substring(0, battleRock.length()-1);
                     }
-                } else if (woodButtonSelected){
+                } else if (woodButtonSelected) {
                     if (battleWood.length() > 0) {
                         battleWood = battleWood.substring(0, battleWood.length()-1);
                     }
@@ -302,7 +305,7 @@ public class Game extends BasicGameState {
                     }
                 }
             } else {
-                if ((player.controlledTiles.size() > 0) && (player.controlledTiles.contains(selectedTile))){
+                if ((player.controlledTiles.size() > 0) && (player.controlledTiles.contains(selectedTile)) && (player.canMill)){
                     player.remove_tile(board.board, selectedTile);
                 } else if ((player.chosenTiles.size() > 0) && (player.chosenTiles.contains(selectedTile))){
                     player.remove_path(board.board, selectedTile);
@@ -392,6 +395,10 @@ public class Game extends BasicGameState {
             } else {
                 koromancyButtonSelected = false;
             }
+        } else if (c == 'l'){
+            System.out.println(player.canMill);
+            System.out.println(player.tileChoices);
+            System.out.println(player.classTiles);
         }
     }
 
@@ -497,7 +504,7 @@ public class Game extends BasicGameState {
                     flashCount = 0;
                     gatheringSound.play(1f,0.5f);
                 }
-            }, 20*1000, 20*1000);
+            }, 20*player.conquerRate, 20*player.resourceTime);
             
             flashTimer.scheduleAtFixedRate( new TimerTask() {
                     @Override
@@ -562,7 +569,7 @@ public class Game extends BasicGameState {
             } catch (Exception e){
                 System.err.println(e.toString());
             }
-            game.enterState(2);
+            game.enterState(3);
         } else if (player.controlledTiles.isEmpty() && player.tileChoices == 0){
             playerWin = false;
             try{
@@ -572,7 +579,7 @@ public class Game extends BasicGameState {
             } catch (Exception e){
                 System.err.println(e.toString());
             }
-            game.enterState(2);
+            game.enterState(3);
         }
         
         
@@ -847,6 +854,11 @@ public class Game extends BasicGameState {
         // TILE CONTROL MENU
         if (aiamancyButtonSelected || ephemancyButtonSelected || koromancyButtonSelected){
             ritualMenuBackground.draw(tHudx, tHudy);
+            if (aiamancyButtonSelected){
+                aiamancyRitualsBackground.draw(tHudx, tHudy+130);
+            } else if (ephemancyButtonSelected){
+                ephemancyRitualsBackground.draw(tHudx, tHudy+130);
+            }
             conquerButtonEnabled = false;
             millButtonEnabled = false;
             pathButtonEnabled = false;
@@ -854,7 +866,11 @@ public class Game extends BasicGameState {
         } else {
             tileMenuBackground.draw(tHudx, tHudy);
         }
+        
         aiamancyButton.draw(tHudx+15, tHudy+100);
+        ephemancyButton.draw(tHudx+235, tHudy+100);
+        koromancyButton.draw(tHudx+465, tHudy+100);
+        
         if (aiamancyButtonSelected || ephemancyButtonSelected || koromancyButtonSelected){
             g.setColor(Color.red);
         }
@@ -867,8 +883,7 @@ public class Game extends BasicGameState {
         }
         g.setColor(Color.white);
         
-        ephemancyButton.draw(tHudx+235, tHudy+100);
-        koromancyButton.draw(tHudx+465, tHudy+100);
+        
         if (selectedTile != null && selectedTile.isBattle == false){
             selectedTile.display_information(tHudx, tHudy, player, enemyPlayer, g);
             if (conquerButtonEnabled){

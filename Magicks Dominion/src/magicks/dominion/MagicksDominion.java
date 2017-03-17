@@ -3,6 +3,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.ScalableGame;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -13,8 +14,8 @@ public class MagicksDominion extends StateBasedGame
     public static final int CLASSSELECTION      = 1;
     public static final int GAME                = 2;
     public static final int ENDGAME             = 3;
-    public static final int SCREENWIDTH         = 2156;
-    public static final int SCREENHEIGHT        = 1251;
+    public static final int SCREENWIDTH         = 1680;
+    public static final int SCREENHEIGHT        = 1050;
     
 	public MagicksDominion(String gamename)
 	{
@@ -36,7 +37,7 @@ public class MagicksDominion extends StateBasedGame
 		try
 		{
 			AppGameContainer appgc;
-			appgc = new AppGameContainer(new MagicksDominion("Magick's Dominion"));
+			appgc = new AppGameContainer(new ScalableGame(new MagicksDominion("Magick's Dominion"),2156,1251));
 			appgc.setDisplayMode(SCREENWIDTH, SCREENHEIGHT, false);
                         appgc.setShowFPS(false);
                         appgc.setVSync(true);
